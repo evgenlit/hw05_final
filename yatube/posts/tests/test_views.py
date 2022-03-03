@@ -10,7 +10,6 @@ from django.urls import reverse
 
 from ..forms import PostForm
 from ..models import Group, Post, User
-from ..views import POSTS_COUNT
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -280,13 +279,13 @@ class PostPaginatorViewTests(TestCase):
         """Проверка: количество постов на первой странице index равно 10."""
         response = self.client.get(reverse('posts:index'))
         posts_count_on_first_page = len(response.context['page_obj'])
-        self.assertEqual(posts_count_on_first_page, POSTS_COUNT)
+        self.assertEqual(posts_count_on_first_page, settings.POSTS_COUNT)
 
     def test_index_second_page_contains_three_records(self):
         """Проверка: количество постов на второй странице index равно 3."""
         response = self.client.get(reverse('posts:index'), {'page': 2})
         posts_count_from_context = len(response.context['page_obj'])
-        posts_on_second_page = Post.objects.count() % POSTS_COUNT
+        posts_on_second_page = Post.objects.count() % settings.POSTS_COUNT
         self.assertEqual(posts_count_from_context, posts_on_second_page)
 
     def test_group_list_first_page_contains_ten_records(self):
@@ -297,7 +296,7 @@ class PostPaginatorViewTests(TestCase):
             reverse('posts:group_list', kwargs={
                 'slug': PostPaginatorViewTests.group.slug}))
         posts_count_on_first_page = len(response.context['page_obj'])
-        self.assertEqual(posts_count_on_first_page, POSTS_COUNT)
+        self.assertEqual(posts_count_on_first_page, settings.POSTS_COUNT)
 
     def test_group_list_second_page_contains_three_records(self):
         """Проверка: количество постов на второй странице
@@ -307,7 +306,7 @@ class PostPaginatorViewTests(TestCase):
             reverse('posts:group_list', kwargs={
                 'slug': PostPaginatorViewTests.group.slug}), {'page': 2})
         posts_count_from_context = len(response.context['page_obj'])
-        posts_on_second_page = Post.objects.count() % POSTS_COUNT
+        posts_on_second_page = Post.objects.count() % settings.POSTS_COUNT
         self.assertEqual(posts_count_from_context, posts_on_second_page)
 
     def test_profile_first_page_contains_ten_records(self):
@@ -318,7 +317,7 @@ class PostPaginatorViewTests(TestCase):
             reverse('posts:profile', kwargs={
                 'username': PostPaginatorViewTests.author.username}))
         posts_count_on_first_page = len(response.context['page_obj'])
-        self.assertEqual(posts_count_on_first_page, POSTS_COUNT)
+        self.assertEqual(posts_count_on_first_page, settings.POSTS_COUNT)
 
     def test_profile_second_page_contains_three_records(self):
         """Проверка: количество постов на второй странице
@@ -329,5 +328,5 @@ class PostPaginatorViewTests(TestCase):
                 'username': PostPaginatorViewTests.author.username}
             ), {'page': 2})
         posts_count_from_context = len(response.context['page_obj'])
-        posts_on_second_page = Post.objects.count() % POSTS_COUNT
+        posts_on_second_page = Post.objects.count() % settings.POSTS_COUNT
         self.assertEqual(posts_count_from_context, posts_on_second_page)

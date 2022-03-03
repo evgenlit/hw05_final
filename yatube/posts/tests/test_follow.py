@@ -37,7 +37,7 @@ class FollowTests(TestCase):
             reverse('posts:profile_follow', kwargs={
                 'username': FollowTests.author}))
 
-        follow = Follow.objects.get(pk=1)
+        follow = Follow.objects.get(user=FollowTests.follower_user)
 
         self.assertEqual(follow.user_id, FollowTests.follower_user.id)
         self.assertEqual(follow.author_id, FollowTests.author.id)
